@@ -141,12 +141,14 @@ module ModuleName
 // Class.method
                   tkMethod,
 // :symbol
-                  tkSymbol
+                  tkSymbol,
+                  tkUnknown
                    );
 
   TRubyCodeFoldBlockType = (
     cfbtBeginEnd,          // BEGIN END
     cfbtMultilineComments, // =BEGIN =END
+    cfbtHereDocString,     // <<HEREDOC ... HEREDOC
     cfbtDefEnd,            // def something ... end
     cfbtClassEnd,          // class Something ... end
     cfbtDoEnd,             // Iteration block
