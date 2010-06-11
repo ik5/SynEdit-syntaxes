@@ -34,10 +34,48 @@ uses
   {$IFDEF SYN_LAZARUS}
       LCLIntf, LCLType,
   {$ENDIF}
-      Graphics, SynEditHighlighter, SynEditHighlighterFoldBase, SynEditTypes,
+      Graphics, SynEditHighlighter, SynEditHighlighterFoldBase, SynEditTypes, SynEditStrConst,
       SysUtils, Classes;
+
+type
+
+  TtkTokenKind = (
+    tkUnknown, tkSpace, tkName, tkEqual, tkValue, tkComment, tkList, tkString
+  );
+
+  { TSynBasicConfig }
+
+  TSynBasicConfig = class(TSynCustomFoldHighlighter)
+  public
+    {$IFNDEF SYN_CPPB_1} class {$ENDIF}
+    function GetLanguageName: string; override;
+
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  end;
 
 implementation
 
+{ TSynBasicConfig }
+
+class function TSynBasicConfig.GetLanguageName : string;
+begin
+  Result := SYNS_LangBasicConfig;
+end;
+
+constructor TSynBasicConfig.Create ( AOwner : TComponent ) ;
+begin
+  inherited Create ( AOwner ) ;
+end;
+
+destructor TSynBasicConfig.Destroy;
+begin
+  inherited Destroy;
+end;
+
+{$IFNDEF SYN_CPPB_1}
+initialization
+  RegisterPlaceableHighlighter(TSynBasicConfig);
+{$ENDIF}
 end.
 
