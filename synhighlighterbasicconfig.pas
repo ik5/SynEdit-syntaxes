@@ -40,12 +40,13 @@ uses
 type
 
   TtkTokenKind = (
-    tkUnknown, tkSpace, tkName, tkEqual, tkValue, tkComment, tkList, tkString
+    tkNil, tkUnknown, tkSpace, tkName, tkEqual, tkValue, tkComment, tkList,
+    tkString
   );
 
   { TSynBasicConfig }
 
-  TSynBasicConfig = class(TSynCustomFoldHighlighter)
+  TSynBasicConfig = class(TSynCustomHighlighter)
   private
     fCommentAttri,
     fEqualAttri,
@@ -64,7 +65,9 @@ type
     destructor Destroy; override;
 
     function  GetTokenAttribute: TSynHighlighterAttributes; override;
-
+    function  GetTokenKind: integer; override;
+    function  GetTokenPos: Integer; override;
+    function  GetTokenID: TtkTokenKind;
   published
     property UnknownAttri : TSynHighlighterAttributes read fUnknownAttri write fUnknownAttri;
     property SpaceAttri   : TSynHighlighterAttributes read fSpaceAttri   write fSpaceAttri;
@@ -125,6 +128,7 @@ end;
 function TSynBasicConfig.GetTokenAttribute : TSynHighlighterAttributes;
 begin
   case fTokenID of
+    tkNil,
     tkUnknown : result := fUnknownAttri;
     tkSpace   : result := fSpaceAttri;
     tkName    : result := fNameAttri;
@@ -135,6 +139,21 @@ begin
     tkString  : result := fSpaceAttri;
     else        result := nil;
   end;
+end;
+
+function TSynBasicConfig.GetTokenKind : integer;
+begin
+  Result := Ord(fTokenID);
+end;
+
+function TSynBasicConfig.GetTokenPos : Integer;
+begin
+  Result := fTokenPos;
+end;
+
+function TSynBasicConfig.GetTokenID : TtkTokenKind;
+begin
+  Result := fTokenId;
 end;
 
 {$IFNDEF SYN_CPPB_1}
