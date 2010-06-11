@@ -46,12 +46,31 @@ type
   { TSynBasicConfig }
 
   TSynBasicConfig = class(TSynCustomFoldHighlighter)
+  private
+    FCommentAttri,
+    FEqualAttri,
+    FListAttri,
+    FNameAttri,
+    FSpaceAttri,
+    FStringAttri,
+    FUnknownAttri,
+    FValueAttri    : TSynHighlighterAttributes;
   public
     {$IFNDEF SYN_CPPB_1} class {$ENDIF}
     function GetLanguageName: string; override;
 
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+
+  published
+    property UnknownAttri : TSynHighlighterAttributes read FUnknownAttri write FUnknownAttri;
+    property SpaceAttri   : TSynHighlighterAttributes read FSpaceAttri   write FSpaceAttri;
+    property NameAttri    : TSynHighlighterAttributes read FNameAttri    write FNameAttri;
+    property EqualAttri   : TSynHighlighterAttributes read FEqualAttri   write FEqualAttri;
+    property ValueAttri   : TSynHighlighterAttributes read FValueAttri   write FValueAttri;
+    property CommentAttri : TSynHighlighterAttributes read FCommentAttri write FCommentAttri;
+    property ListAttri    : TSynHighlighterAttributes read FListAttri    write FListAttri;
+    property StringAttri  : TSynHighlighterAttributes read FStringAttri  write FStringAttri;
   end;
 
 implementation
@@ -66,6 +85,33 @@ end;
 constructor TSynBasicConfig.Create ( AOwner : TComponent ) ;
 begin
   inherited Create ( AOwner ) ;
+
+  FCommentAttri       := TSynHighlighterAttributes.Create(SYNS_AttrComment, SYNS_XML_AttrComment);
+  FCommentAttri.Style := [fsItalic];
+  AddAttribute(FCommentAttri);
+
+  FEqualAttri         := TSynHighlighterAttributes.Create(SYNS_AttrCondition, SYNS_XML_AttrOperator);
+  AddAttribute(FEqualAttri);
+
+  FListAttri          := TSynHighlighterAttributes.Create(SYNS_AttrListOfValues, SYNS_XML_ListOfValues);
+  AddAttribute(FListAttri);
+
+  FNameAttri          := TSynHighlighterAttributes.Create(SYNS_AttrKey, SYNS_XML_AttrKey);
+  FNameAttri.Style    := [fsBold];
+  AddAttribute(FNameAttri);
+
+  FSpaceAttri         := TSynHighlighterAttributes.Create(SYNS_AttrSpace, SYNS_XML_AttrSpace);
+  AddAttribute(FSpaceAttri);
+
+  FStringAttri        := TSynHighlighterAttributes.Create(SYNS_AttrString, SYNS_XML_AttrString);
+  AddAttribute(FStringAttri);
+
+  FUnknownAttri       := TSynHighlighterAttributes.Create(SYNS_AttrUnknownWord, SYNS_XML_AttrUnknownWord);
+  FUnknownAttri.Style := [fsItalic];
+  AddAttribute(FUnknownAttri);
+
+  FValueAttri         := TSynHighlighterAttributes.Create(SYNS_AttrValue, SYNS_XML_AttrValue);
+  AddAttribute(FValueAttri);
 end;
 
 destructor TSynBasicConfig.Destroy;
