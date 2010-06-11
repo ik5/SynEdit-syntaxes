@@ -1,0 +1,1 @@
+/home/ik/projects/lazarus/lazarus/components/synedit/syneditstrconst.pp
