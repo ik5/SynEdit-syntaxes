@@ -47,14 +47,15 @@ type
 
   TSynBasicConfig = class(TSynCustomFoldHighlighter)
   private
-    FCommentAttri,
-    FEqualAttri,
-    FListAttri,
-    FNameAttri,
-    FSpaceAttri,
-    FStringAttri,
-    FUnknownAttri,
-    FValueAttri    : TSynHighlighterAttributes;
+    fCommentAttri,
+    fEqualAttri,
+    fListAttri,
+    fNameAttri,
+    fSpaceAttri,
+    fStringAttri,
+    fUnknownAttri,
+    fValueAttri    : TSynHighlighterAttributes;
+    fTokenID       : TtkTokenKind;
   public
     {$IFNDEF SYN_CPPB_1} class {$ENDIF}
     function GetLanguageName: string; override;
@@ -62,15 +63,17 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
+    function  GetTokenAttribute: TSynHighlighterAttributes; override;
+
   published
-    property UnknownAttri : TSynHighlighterAttributes read FUnknownAttri write FUnknownAttri;
-    property SpaceAttri   : TSynHighlighterAttributes read FSpaceAttri   write FSpaceAttri;
-    property NameAttri    : TSynHighlighterAttributes read FNameAttri    write FNameAttri;
-    property EqualAttri   : TSynHighlighterAttributes read FEqualAttri   write FEqualAttri;
-    property ValueAttri   : TSynHighlighterAttributes read FValueAttri   write FValueAttri;
-    property CommentAttri : TSynHighlighterAttributes read FCommentAttri write FCommentAttri;
-    property ListAttri    : TSynHighlighterAttributes read FListAttri    write FListAttri;
-    property StringAttri  : TSynHighlighterAttributes read FStringAttri  write FStringAttri;
+    property UnknownAttri : TSynHighlighterAttributes read fUnknownAttri write fUnknownAttri;
+    property SpaceAttri   : TSynHighlighterAttributes read fSpaceAttri   write fSpaceAttri;
+    property NameAttri    : TSynHighlighterAttributes read fNameAttri    write fNameAttri;
+    property EqualAttri   : TSynHighlighterAttributes read fEqualAttri   write fEqualAttri;
+    property ValueAttri   : TSynHighlighterAttributes read fValueAttri   write fValueAttri;
+    property CommentAttri : TSynHighlighterAttributes read fCommentAttri write fCommentAttri;
+    property ListAttri    : TSynHighlighterAttributes read fListAttri    write fListAttri;
+    property StringAttri  : TSynHighlighterAttributes read fStringAttri  write fStringAttri;
   end;
 
 implementation
@@ -86,37 +89,52 @@ constructor TSynBasicConfig.Create ( AOwner : TComponent ) ;
 begin
   inherited Create ( AOwner ) ;
 
-  FCommentAttri       := TSynHighlighterAttributes.Create(SYNS_AttrComment, SYNS_XML_AttrComment);
-  FCommentAttri.Style := [fsItalic];
-  AddAttribute(FCommentAttri);
+  fCommentAttri       := TSynHighlighterAttributes.Create(SYNS_AttrComment, SYNS_XML_AttrComment);
+  fCommentAttri.Style := [fsItalic];
+  AddAttribute(fCommentAttri);
 
-  FEqualAttri         := TSynHighlighterAttributes.Create(SYNS_AttrCondition, SYNS_XML_AttrOperator);
-  AddAttribute(FEqualAttri);
+  fEqualAttri         := TSynHighlighterAttributes.Create(SYNS_AttrCondition, SYNS_XML_AttrOperator);
+  AddAttribute(fEqualAttri);
 
-  FListAttri          := TSynHighlighterAttributes.Create(SYNS_AttrListOfValues, SYNS_XML_ListOfValues);
-  AddAttribute(FListAttri);
+  fListAttri          := TSynHighlighterAttributes.Create(SYNS_AttrListOfValues, SYNS_XML_ListOfValues);
+  AddAttribute(fListAttri);
 
-  FNameAttri          := TSynHighlighterAttributes.Create(SYNS_AttrKey, SYNS_XML_AttrKey);
-  FNameAttri.Style    := [fsBold];
-  AddAttribute(FNameAttri);
+  fNameAttri          := TSynHighlighterAttributes.Create(SYNS_AttrKey, SYNS_XML_AttrKey);
+  fNameAttri.Style    := [fsBold];
+  AddAttribute(fNameAttri);
 
-  FSpaceAttri         := TSynHighlighterAttributes.Create(SYNS_AttrSpace, SYNS_XML_AttrSpace);
-  AddAttribute(FSpaceAttri);
+  fSpaceAttri         := TSynHighlighterAttributes.Create(SYNS_AttrSpace, SYNS_XML_AttrSpace);
+  AddAttribute(fSpaceAttri);
 
-  FStringAttri        := TSynHighlighterAttributes.Create(SYNS_AttrString, SYNS_XML_AttrString);
-  AddAttribute(FStringAttri);
+  fStringAttri        := TSynHighlighterAttributes.Create(SYNS_AttrString, SYNS_XML_AttrString);
+  AddAttribute(fStringAttri);
 
-  FUnknownAttri       := TSynHighlighterAttributes.Create(SYNS_AttrUnknownWord, SYNS_XML_AttrUnknownWord);
-  FUnknownAttri.Style := [fsItalic];
-  AddAttribute(FUnknownAttri);
+  fUnknownAttri       := TSynHighlighterAttributes.Create(SYNS_AttrUnknownWord, SYNS_XML_AttrUnknownWord);
+  fUnknownAttri.Style := [fsItalic];
+  AddAttribute(fUnknownAttri);
 
-  FValueAttri         := TSynHighlighterAttributes.Create(SYNS_AttrValue, SYNS_XML_AttrValue);
-  AddAttribute(FValueAttri);
+  fValueAttri         := TSynHighlighterAttributes.Create(SYNS_AttrValue, SYNS_XML_AttrValue);
+  AddAttribute(fValueAttri);
 end;
 
 destructor TSynBasicConfig.Destroy;
 begin
   inherited Destroy;
+end;
+
+function TSynBasicConfig.GetTokenAttribute : TSynHighlighterAttributes;
+begin
+  case fTokenID of
+    tkUnknown : result := fUnknownAttri;
+    tkSpace   : result := fSpaceAttri;
+    tkName    : result := fNameAttri;
+    tkEqual   : result := fEqualAttri;
+    tkValue   : result := fValueAttri;
+    tkComment : result := fCommentAttri;
+    tkList    : result := fListAttri;
+    tkString  : result := fSpaceAttri;
+    else        result := nil;
+  end;
 end;
 
 {$IFNDEF SYN_CPPB_1}
