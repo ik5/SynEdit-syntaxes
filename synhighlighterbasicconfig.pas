@@ -4,7 +4,7 @@
 
   ; one line comment
   name=value
-  name =more value
+  name= more value
   name = "some value"
   name =value,value,value ; comment
 
@@ -58,19 +58,26 @@ type
     fUnknownAttri,
     fValueAttri    : TSynHighlighterAttributes;
     fTokenID       : TtkTokenKind;
+  protected
+    function GetDefaultAttribute ( Index : integer
+      ) : TSynHighlighterAttributes; override;
   public
     {$IFNDEF SYN_CPPB_1} class {$ENDIF}
     function GetLanguageName: string; override;
 
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    function GetToken : String; override;
 
     function  GetTokenAttribute: TSynHighlighterAttributes; override;
+    procedure GetTokenEx ( out TokenStart : PChar; out TokenLength : integer
+      ) ; override;
     function  GetTokenKind: integer; override;
     function  GetTokenPos: Integer; override;
     function  GetTokenID: TtkTokenKind;
 
     function GetEol: Boolean; override;
+    procedure Next; override;
 
 
   published
@@ -95,6 +102,12 @@ type
 implementation
 
 { TSynBasicConfig }
+
+function TSynBasicConfig.GetDefaultAttribute ( Index : integer
+  ) : TSynHighlighterAttributes;
+begin
+  Result := nil;
+end;
 
 class function TSynBasicConfig.GetLanguageName : string;
 begin
@@ -146,6 +159,11 @@ begin
   inherited Destroy;
 end;
 
+function TSynBasicConfig.GetToken : String;
+begin
+  {%TODO: }
+end;
+
 function TSynBasicConfig.GetTokenAttribute : TSynHighlighterAttributes;
 begin
   case fTokenID of
@@ -160,6 +178,12 @@ begin
     tkString  : result := fSpaceAttri;
     else        result := nil;
   end;
+end;
+
+procedure TSynBasicConfig.GetTokenEx ( out TokenStart : PChar; out
+  TokenLength : integer ) ;
+begin
+  {%TODO: }
 end;
 
 function TSynBasicConfig.GetTokenKind : integer;
@@ -180,6 +204,11 @@ end;
 function TSynBasicConfig.GetEol : Boolean;
 begin
   Result := fTokenId = tkNull;
+end;
+
+procedure TSynBasicConfig.Next;
+begin
+  {%TODO: }
 end;
 
 {$IFNDEF SYN_CPPB_1}
