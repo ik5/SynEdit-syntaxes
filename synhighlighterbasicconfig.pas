@@ -39,10 +39,12 @@ uses
 
 type
 
+  TProcTableProc = procedure of object;
+
   TtkTokenKind = (
     tkNil,   tkUnknown, tkSpace,   tkName,
     tkEqual, tkValue,   tkComment, tkList,
-    tkString
+    tkString, tkEndOfLine
   );
 
   { TSynBasicConfig }
@@ -58,6 +60,8 @@ type
     fUnknownAttri,
     fValueAttri    : TSynHighlighterAttributes;
     fTokenID       : TtkTokenKind;
+    fTokenPos      : Integer;
+    fProcTable     : array[#0..#255] of TProcTableProc;
   protected
     function GetDefaultAttribute ( Index : integer
       ) : TSynHighlighterAttributes; override;
@@ -203,7 +207,7 @@ end;
 
 function TSynBasicConfig.GetEol : Boolean;
 begin
-  Result := fTokenId = tkNull;
+  Result := fTokenId in [tkNil, tkEndOfLine];
 end;
 
 procedure TSynBasicConfig.Next;
